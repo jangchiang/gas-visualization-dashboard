@@ -7,7 +7,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   env: {
-    PORT: 8807
+    PORT: 3002  // Internal port for Node.js
   },
   images: {
     unoptimized: true,
@@ -15,23 +15,7 @@ const nextConfig = {
   },
   output: 'standalone',
   experimental: {
-    serverActions: true,
-  },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.csv$/,
-      loader: 'csv-loader',
-      options: {
-        dynamicTyping: true,
-        header: true,
-        skipEmptyLines: true
-      }
-    });
-    return config;
-  },
-  // Add this for handling large files
-  experimental: {
-    largePageDataBytes: 128 * 100000, // Increase the limit to 12.8MB
+    largePageDataBytes: 128 * 100000,
   },
 };
 
