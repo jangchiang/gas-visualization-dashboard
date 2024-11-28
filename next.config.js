@@ -1,16 +1,11 @@
-// next.config.js
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Add port configuration
   env: {
     PORT: 8807
   },
@@ -18,13 +13,10 @@ const nextConfig = {
     unoptimized: true,
     domains: ['localhost']
   },
-  // Add output configuration for production
   output: 'standalone',
-  // Add experimental features if needed
   experimental: {
     serverActions: true,
   },
-  // Add webpack configuration for CSV files
   webpack: (config) => {
     config.module.rules.push({
       test: /\.csv$/,
@@ -36,6 +28,10 @@ const nextConfig = {
       }
     });
     return config;
+  },
+  // Add this for handling large files
+  experimental: {
+    largePageDataBytes: 128 * 100000, // Increase the limit to 12.8MB
   },
 };
 
