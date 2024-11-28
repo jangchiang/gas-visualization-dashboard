@@ -9,8 +9,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
     domains: ['localhost']
-  },
-  // Remove output: 'standalone' and env.PORT since we're using PM2
+  }
+  // Removed output: standalone and env.PORT
 };
 
 module.exports = nextConfig;
