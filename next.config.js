@@ -6,17 +6,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  env: {
-    PORT: 3002  // Internal port for Node.js
-  },
   images: {
     unoptimized: true,
     domains: ['localhost']
   },
-  output: 'standalone',
-  experimental: {
-    largePageDataBytes: 128 * 100000,
-  },
+  // Remove output: 'standalone' and env.PORT since we're using PM2
 };
 
 module.exports = nextConfig;
