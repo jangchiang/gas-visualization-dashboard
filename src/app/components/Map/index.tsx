@@ -53,9 +53,20 @@ const MapComponent = (props: MapProps) => {
       .map(([source, volume]) => ({ source, volume }))
       .sort((a, b) => b.volume - a.volume)
 
+    const typeBreakdown = Array.from(
+      data.reduce((acc, item) => {
+        const current = acc.get(item.type) || 0
+        acc.set(item.type, current + item.volume)
+        return acc
+      }, new Map<string, number>())
+    )
+      .map(([type, volume]) => ({ type, volume }))
+      .sort((a, b) => b.volume - a.volume)
+
     return {
       totalVolume: sourceBreakdown.reduce((sum, item) => sum + item.volume, 0),
-      sourceBreakdown
+      sourceBreakdown,
+      typeBreakdown
     }
   }, [data])
 
@@ -72,7 +83,6 @@ const MapComponent = (props: MapProps) => {
     const volume = stateData.aggregates.get(thCode) || 0
     if (stateData.max === 0) return '#f3f4f6'
     const intensity = volume / stateData.max
-    // Make the color more visible
     return `rgba(0, 0, 255, ${intensity})`
   }, [stateData])
   
@@ -117,6 +127,7 @@ const MapComponent = (props: MapProps) => {
     const totalVolume = stateData.aggregates.get(thCode) || 0
 
     const provinceData = data.filter(d => d.state.trim() === provinceName.trim())
+    
     const sourceBreakdown = Array.from(
       provinceData.reduce((acc, item) => {
         const current = acc.get(item.source) || 0
@@ -127,11 +138,22 @@ const MapComponent = (props: MapProps) => {
       .map(([source, volume]) => ({ source, volume }))
       .sort((a, b) => b.volume - a.volume)
 
+    const typeBreakdown = Array.from(
+      provinceData.reduce((acc, item) => {
+        const current = acc.get(item.type) || 0
+        acc.set(item.type, current + item.volume)
+        return acc
+      }, new Map<string, number>())
+    )
+      .map(([type, volume]) => ({ type, volume }))
+      .sort((a, b) => b.volume - a.volume)
+
     onStateClick({
       state: provinceName,
       state_english: stateEnglish,
       totalVolume,
-      sourceBreakdown
+      sourceBreakdown,
+      typeBreakdown
     })
 
     const bbox = (svgRef.current?.getElementById(thCode) as SVGPathElement)?.getBBox()
@@ -156,7 +178,8 @@ const MapComponent = (props: MapProps) => {
       state: "Overall",
       state_english: "Thailand",
       totalVolume: overallData.totalVolume,
-      sourceBreakdown: overallData.sourceBreakdown
+      sourceBreakdown: overallData.sourceBreakdown,
+      typeBreakdown: overallData.typeBreakdown
     })
   }
 

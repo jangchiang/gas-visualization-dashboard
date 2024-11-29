@@ -104,6 +104,9 @@ export const PROVINCES = {
   
   export const YEARS = [62, 63, 64, 65, 66, 67]
   
+  export const TYPE = ['สถานีบริการ', 'ครัวเรือน', 'อุตสาหกรรม']
+
+  
   export const SOURCES = [
     'ปตท',
     'บางจาก',

@@ -14,6 +14,7 @@ export interface FilterState {
   year?: number
   month?: string
   part_state?: string
+  type?: string
   source?: string
 }
 
@@ -23,6 +24,10 @@ export interface MapClickData {
   totalVolume: number
   sourceBreakdown: Array<{
     source: string
+    volume: number
+  }>
+  typeBreakdown: Array<{
+    type: string
     volume: number
   }>
 }

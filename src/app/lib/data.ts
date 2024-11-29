@@ -6,7 +6,7 @@ export async function loadCSVData(): Promise<GasData[]> {
   try {
     const response = await fetch('/finaldataset_tran.csv')
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
     const csvText = await response.text()
     return csvText
@@ -38,6 +38,7 @@ export function filterData(data: GasData[], filters: FilterState): GasData[] {
     if (filters.year && item.year !== filters.year) return false
     if (filters.month && item.month !== filters.month) return false
     if (filters.part_state && item.part_state !== filters.part_state) return false
+    if (filters.type && item.type !== filters.type) return false
     if (filters.source && item.source !== filters.source) return false
     return true
   })
@@ -70,6 +71,37 @@ export function getSourceBreakdown(data: GasData[], thCode: string): { source: s
   return Array.from(breakdown.entries())
     .map(([source, volume]) => ({ source, volume }))
     .sort((a, b) => b.volume - a.volume)
+}
+
+export function getTypeBreakdown(data: GasData[], thCode: string): { type: string; volume: number }[] {
+  const provinceName = PROVINCE_MAPPING[thCode]
+  if (!provinceName) return []
+
+  const breakdown = data
+    .filter(item => item.state === provinceName)
+    .reduce((acc, item) => {
+      const current = acc.get(item.type) || 0
+      acc.set(item.type, current + item.volume)
+      return acc
+    }, new Map<string, number>())
+
+  return Array.from(breakdown.entries())
+    .map(([type, volume]) => ({ type, volume }))
+    .sort((a, b) => b.volume - a.volume)
+}
+
+export function getTotalVolume(data: GasData[]): number {
+  return data.reduce((total, item) => total + item.volume, 0)
+}
+
+export function validateData(data: GasData[]): boolean {
+  return data.every(item => (
+    typeof item.year === 'number' && !isNaN(item.year) &&
+    typeof item.volume === 'number' && !isNaN(item.volume) &&
+    typeof item.state === 'string' && item.state.trim() !== '' &&
+    typeof item.type === 'string' && item.type.trim() !== '' &&
+    typeof item.source === 'string' && item.source.trim() !== ''
+  ))
 }
 
 export { PROVINCE_MAPPING }

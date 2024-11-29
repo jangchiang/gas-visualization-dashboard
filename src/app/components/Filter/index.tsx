@@ -1,7 +1,7 @@
 // src/app/components/Filter/index.tsx
 'use client'
 
-import { YEARS, MONTHS, REGIONS, SOURCES } from '@/app/lib/constants'
+import { YEARS, MONTHS, REGIONS, SOURCES, TYPE } from '@/app/lib/constants'
 import { FilterState } from '@/app/lib/types'
 
 interface FilterProps {
@@ -20,7 +20,7 @@ export default function Filter({ onFilterChange }: FilterProps) {
   const labelClass = "block text-sm font-medium text-gray-700 mb-1"
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-4">
       <div>
         <label className={labelClass}>Year</label>
         <select 
@@ -59,6 +59,20 @@ export default function Filter({ onFilterChange }: FilterProps) {
           <option value="">All Regions</option>
           {REGIONS.map(region => (
             <option key={region} value={region}>{region}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className={labelClass}>Type</label>
+        <select 
+          className={selectClass}
+          onChange={(e) => handleFilterChange('type', e.target.value)}
+          defaultValue=""
+        >
+          <option value="">All Types</option>
+          {TYPE.map(type => (
+            <option key={type} value={type}>{type}</option>
           ))}
         </select>
       </div>
