@@ -11,31 +11,29 @@ interface TableProps {
 export default function Table({ data }: TableProps) {
   const [view, setView] = useState<'source' | 'type'>('source')
 
-  const tableData = view === 'source' 
-    ? data.sourceBreakdown
-    : data.typeBreakdown
+  const tableData = view === 'source' ? data.sourceBreakdown : data.typeBreakdown
 
   return (
     <div className="mt-8">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 sticky top-0 bg-white z-10 pb-2">
         <h3 className="text-lg font-semibold">Detailed Breakdown</h3>
         <div className="flex gap-2">
           <button
             onClick={() => setView('source')}
-            className={`px-3 py-1 rounded ${
+            className={`px-4 py-2 rounded transition-colors duration-200 ${
               view === 'source' 
                 ? 'bg-blue-500 text-white' 
-                : 'bg-gray-200 text-gray-700'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             Source
           </button>
           <button
             onClick={() => setView('type')}
-            className={`px-3 py-1 rounded ${
+            className={`px-4 py-2 rounded transition-colors duration-200 ${
               view === 'type' 
                 ? 'bg-blue-500 text-white' 
-                : 'bg-gray-200 text-gray-700'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             Type
