@@ -1,7 +1,7 @@
 // src/app/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useGasData } from './hooks/useGasData'
 import { FilterState, MapClickData, GasData } from './lib/types'
 import Filter from './components/Filter'
@@ -12,6 +12,8 @@ import Table from './components/Table'
 export default function Home() {
   const [filters, setFilters] = useState<FilterState>({})
   const [selectedState, setSelectedState] = useState<MapClickData | null>(null)
+  const mapRef = useRef<any>(null)
+  
   const {
     data = [] as GasData[],
     isLoading = false,
@@ -22,13 +24,22 @@ export default function Home() {
     setSelectedState(stateData)
   }
 
+  const handleProvinceSelect = (thCode: string) => {
+    if (mapRef.current) {
+      mapRef.current.handleStateClick(thCode)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-[1600px] mx-auto space-y-6">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Gas Distribution Dashboard</h1>
-          <Filter onFilterChange={setFilters} />
+          <Filter 
+            onFilterChange={setFilters}
+            onProvinceSelect={handleProvinceSelect}
+          />
         </div>
 
         {/* Main Content */}
@@ -43,8 +54,9 @@ export default function Home() {
                 Error loading data: {error}
               </div>
             ) : (
-              <Map 
-                data={data} 
+              <Map
+                ref={mapRef}
+                data={data}
                 onStateClick={handleStateClick}
               />
             )}

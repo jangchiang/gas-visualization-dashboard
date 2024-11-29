@@ -1,7 +1,7 @@
 // src/app/components/Map/index.tsx
 'use client'
 
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
+import { useEffect, useState, useRef, useMemo, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { GasData, MapClickData } from '@/app/lib/types'
 import { aggregateByState, getSourceBreakdown } from '@/app/lib/data'
 import { PROVINCES, PROVINCE_MAPPING } from '@/app/lib/constants'
@@ -20,7 +20,7 @@ interface ViewBox {
   height: number
 }
 
-const MapComponent = (props: MapProps) => {
+const MapComponent = forwardRef<{ handleStateClick: (thCode: string) => void }, MapProps>((props, ref) => {
   const { data = [], onStateClick } = props
   const mapRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -38,7 +38,6 @@ const MapComponent = (props: MapProps) => {
       aggregates.set(thCode, total)
     })
     const max = Math.max(...Array.from(aggregates.values()), 0)
-    console.log('State aggregates:', Object.fromEntries(aggregates))
     return { aggregates, max }
   }, [data])
 
@@ -169,6 +168,10 @@ const MapComponent = (props: MapProps) => {
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    handleStateClick
+  }))
+
   const handleReset = () => {
     setSelectedState(null)
     setViewBox({ x: 0, y: 0, width: 1000, height: 1000 })
@@ -282,6 +285,8 @@ const MapComponent = (props: MapProps) => {
       </div>
     </div>
   )
-}
+})
+
+MapComponent.displayName = 'MapComponent'
 
 export default MapComponent
